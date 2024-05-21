@@ -14,6 +14,7 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private GameScore gameScore;
     [SerializeField] private SpriteRenderer tutorialGameSpriteRenderer;
     [SerializeField] private GameObject finishPanel;
+    [SerializeField] private Image startPanel;
 
     private float _valueTopYPositionFinishPanel = -28f;
     private float _valueBottomYPositionFinishPanel = -1405f;
@@ -33,6 +34,7 @@ public class GameHandler : MonoBehaviour
 
     private void Start()
     {
+        startPanel.DOFade(0, 1f);
         tutorialGameSpriteRenderer.DOFade(1, 0.35f);
     }
 
@@ -70,11 +72,19 @@ public class GameHandler : MonoBehaviour
 
     public void RestartGame()
     {
-        finishPanel.transform.DOLocalMoveY(_valueBottomYPositionFinishPanel, 1f).SetEase(Ease.InBack).SetUpdate(UpdateType.Normal,true).
-            OnComplete(()=>
+        var sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
+        sequence.SetDelay(0.75f);
+        sequence.Append(startPanel.DOFade(1, 0.5f).OnComplete(() =>
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             Time.timeScale = 1;
+
+        }));
+        
+        finishPanel.transform.DOLocalMoveY(_valueBottomYPositionFinishPanel, 1f).SetEase(Ease.InBack).SetUpdate(UpdateType.Normal,true).
+            OnComplete(()=>
+        {
+            
         });
         
         
