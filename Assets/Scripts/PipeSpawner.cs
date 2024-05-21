@@ -7,34 +7,48 @@ using Random = UnityEngine.Random;
 
 public class PipeSpawner : MonoBehaviour
 {
-    [SerializeField] private float MaxHeightSpawn;
-    [SerializeField] private float MinHeightSpawn;
-    [SerializeField] private float TimeDelaySpawn;
-    [SerializeField] private GameObject PrefabPipe;
-    [SerializeField] private GameObject PipeParent;
+    [SerializeField] private float maxHeightSpawn;
+    [SerializeField] private float minHeightSpawn;
+    [SerializeField] private float timeDelaySpawn;
+    [SerializeField] private GameObject prefabPipe;
+    [SerializeField] private GameObject pipeParent;
+    [SerializeField] private GameHandler gameHandler;
 
     private float _timer;
-    private void Start()
+    private bool _startGame;
+
+    private void OnEnable()
     {
-        _timer = TimeDelaySpawn;
-        SpawnPipe();
+        gameHandler.OnStartGame += StartGame;
+    }
+
+    private void OnDisable()
+    {
+        gameHandler.OnStartGame -= StartGame;
     }
 
     private void Update()
     {
+        if (_startGame == false)
+            return;
+        
         if (_timer <= 0)
         {
             SpawnPipe();
-            _timer = TimeDelaySpawn;
+            _timer = timeDelaySpawn;
         }
-
         _timer -= Time.deltaTime;
     }
 
     private void SpawnPipe()
     {
-        Vector3 spawnPosition = transform.position + new Vector3(0, Random.Range(MaxHeightSpawn, MinHeightSpawn));
-        GameObject pipe = Instantiate(PrefabPipe,spawnPosition,Quaternion.identity, PipeParent.transform);
+        Vector3 spawnPosition = transform.position + new Vector3(0, Random.Range(maxHeightSpawn, minHeightSpawn));
+        GameObject pipe = Instantiate(prefabPipe,spawnPosition,Quaternion.identity, pipeParent.transform);
         Destroy(pipe,10f);
+    }
+
+    private void StartGame(bool starGame)
+    {
+        _startGame = starGame;
     }
 }
