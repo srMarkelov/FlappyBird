@@ -12,18 +12,25 @@ public class BirdBehavior : MonoBehaviour
     [SerializeField] private Rigidbody2D rigidbody; 
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float maxHeight;
+    [SerializeField] private AudioHandler audioHandler;
 
     public Action OnCollisionGroundAndPipe;
     public Action OnTriggerPoint;
+
+    private bool deadBird; 
     
 
     private void Update()
     {
         if (transform.position.y >= maxHeight)
             return;
+
+        if (deadBird)
+            return;
         
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
+            audioHandler.PlayWing();
             rigidbody.velocity = Vector2.up * velocity;
         }
     }
@@ -36,10 +43,12 @@ public class BirdBehavior : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         OnCollisionGroundAndPipe?.Invoke();
+        deadBird = true;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        audioHandler.PlayPoint();
         OnTriggerPoint?.Invoke();
     }
 

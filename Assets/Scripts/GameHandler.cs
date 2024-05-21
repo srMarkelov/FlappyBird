@@ -15,6 +15,7 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private SpriteRenderer tutorialGameSpriteRenderer;
     [SerializeField] private GameObject finishPanel;
     [SerializeField] private Image startPanel;
+    [SerializeField] private AudioHandler audioHandler;
 
     private float _valueTopYPositionFinishPanel = -28f;
     private float _valueBottomYPositionFinishPanel = -1405f;
@@ -63,6 +64,8 @@ public class GameHandler : MonoBehaviour
     }
     public void GameOver()
     {
+        audioHandler.PlayDead();
+        audioHandler.PlayHit();
         gameScore.CheckRecord();
         var sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal,true);
         sequence.SetDelay(0.15f);
@@ -72,21 +75,22 @@ public class GameHandler : MonoBehaviour
 
     public void RestartGame()
     {
+        audioHandler.PlayClick();
+
         var sequence = DOTween.Sequence().SetUpdate(UpdateType.Normal, true);
         sequence.SetDelay(0.75f);
         sequence.Append(startPanel.DOFade(1, 0.5f).OnComplete(() =>
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             Time.timeScale = 1;
-
         }));
         
-        finishPanel.transform.DOLocalMoveY(_valueBottomYPositionFinishPanel, 1f).SetEase(Ease.InBack).SetUpdate(UpdateType.Normal,true).
-            OnComplete(()=>
-        {
-            
-        });
-        
-        
+        finishPanel.transform.DOLocalMoveY(_valueBottomYPositionFinishPanel, 0.85f).SetEase(Ease.InBack).
+            SetUpdate(UpdateType.Normal,true).OnComplete(() =>
+            {
+                audioHandler.PlaySwoosh();
+            });
     }
+
+    
 }

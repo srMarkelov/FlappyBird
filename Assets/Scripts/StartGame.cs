@@ -16,8 +16,8 @@ public class StartGame : MonoBehaviour
     [SerializeField] private GameObject birdSprite;
     [SerializeField] private GameObject playButton;
     [SerializeField] private float endPositionYBirdSprite;
-    [SerializeField] private float endPositionYPlayButton;
     [SerializeField] private Image panel;
+    [SerializeField] private AudioHandler audioHandler;
 
     private bool _clickScreen; 
 
@@ -26,34 +26,44 @@ public class StartGame : MonoBehaviour
         recordText.text = saveHandler.GetBestScore().ToString();
     }
 
-    private void Update()
+    /*private void Update()
     {
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            if (_clickScreen)
-                return;
-
-            _clickScreen = true;
-            LoadNextLevel();
+            
         }
-    }
+    }*/
 
+    public void ClickLoadLevel()
+    {
+        if (_clickScreen)
+            return;
+        audioHandler.PlayClick();
+        _clickScreen = true;
+        LoadNextLevel();
+    }
     private void LoadNextLevel()
     {
+        Invoke("PlaySwooshAudio",1.5f);
+        
         var sequence = DOTween.Sequence();
         sequence.SetDelay(2.45f);
         sequence.Append(panel.DOFade(1, 0.7f).OnComplete(() =>
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-
         }));
         
         
         
-        birdSprite.transform.DOMoveX(endPositionYBirdSprite,3).SetEase(Ease.InBack);
-        playButton.transform.DOScale(0.3f,1).SetEase(Ease.InBack).OnComplete(() =>
+        birdSprite.transform.DOMoveX(endPositionYBirdSprite,2).SetEase(Ease.InBack);
+        playButton.transform.DOScale(0.3f,0.65f).SetEase(Ease.InBack).OnComplete(() =>
         {
             playButton.SetActive(false);
         });
+    }
+
+    public void PlaySwooshAudio()
+    {
+        audioHandler.PlaySwoosh();
     }
 }
