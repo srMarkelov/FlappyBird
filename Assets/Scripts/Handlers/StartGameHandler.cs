@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class StartGame : MonoBehaviour
+public class StartGameHandler : MonoBehaviour
 {
     [SerializeField] private SaveHandler saveHandler;
     [SerializeField] private TextMeshProUGUI recordText;
@@ -25,19 +25,12 @@ public class StartGame : MonoBehaviour
     {
         recordText.text = saveHandler.GetBestScore().ToString();
     }
-
-    /*private void Update()
-    {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            
-        }
-    }*/
-
+    
     public void ClickLoadLevel()
     {
         if (_clickScreen)
             return;
+        
         audioHandler.PlayClick();
         _clickScreen = true;
         LoadNextLevel();
@@ -45,16 +38,12 @@ public class StartGame : MonoBehaviour
     private void LoadNextLevel()
     {
         Invoke("PlaySwooshAudio",1.5f);
-        
         var sequence = DOTween.Sequence();
         sequence.SetDelay(2.45f);
         sequence.Append(panel.DOFade(1, 0.7f).OnComplete(() =>
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }));
-        
-        
-        
         birdSprite.transform.DOMoveX(endPositionYBirdSprite,2).SetEase(Ease.InBack);
         playButton.transform.DOScale(0.3f,0.65f).SetEase(Ease.InBack).OnComplete(() =>
         {

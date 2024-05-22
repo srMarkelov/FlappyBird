@@ -9,9 +9,9 @@ public class AppsFlyerManager : MonoBehaviour
     void Start()
     {
         DontDestroyOnLoad(this);
-        AppsFlyer.initSDK(devKey,appId);
+        Init();
     }
-
+    
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -19,5 +19,10 @@ public class AppsFlyerManager : MonoBehaviour
             // Пример отправки события
             AppsFlyer.sendEvent("sample_event", null);
         }
+    }
+    
+    private void Init()
+    {
+        AppsFlyer.initSDK(devKey,appId);
     }
 }

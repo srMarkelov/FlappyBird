@@ -29,6 +29,11 @@ public class PipeSpawner : MonoBehaviour
 
     private void Update()
     {
+        DelayBeforeSpawnPipe();
+    }
+
+    private void DelayBeforeSpawnPipe()
+    {
         if (_startGame == false)
             return;
         
@@ -39,7 +44,7 @@ public class PipeSpawner : MonoBehaviour
         }
         _timer -= Time.deltaTime;
     }
-
+    
     private void SpawnPipe()
     {
         Vector3 spawnPosition = transform.position + new Vector3(0, Random.Range(maxHeightSpawn, minHeightSpawn));

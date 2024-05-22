@@ -22,6 +22,16 @@ public class BirdBehavior : MonoBehaviour
 
     private void Update()
     {
+        FlapWing();
+    }
+    
+    private void FixedUpdate()
+    {
+        AdjustRotation();
+    }
+
+    private void FlapWing()
+    {
         if (transform.position.y >= maxHeight)
             return;
 
@@ -35,9 +45,21 @@ public class BirdBehavior : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    private void AdjustRotation()
     {
         transform.rotation = Quaternion.Euler(0,0,rigidbody.velocity.y * rotationSpeed);
+    }
+    
+    public void SetGravity(bool gravityScale)
+    {
+        if (gravityScale)
+        {
+            rigidbody.gravityScale = 1;
+        }
+        else
+        {
+            rigidbody.gravityScale = 0;
+        }
     }
     
     private void OnCollisionEnter2D(Collision2D other)
@@ -50,17 +72,5 @@ public class BirdBehavior : MonoBehaviour
     {
         audioHandler.PlayPoint();
         OnTriggerPoint?.Invoke();
-    }
-
-    public void SetGravity(bool gravityScale)
-    {
-        if (gravityScale)
-        {
-            rigidbody.gravityScale = 1;
-        }
-        else
-        {
-            rigidbody.gravityScale = 0;
-        }
     }
 }

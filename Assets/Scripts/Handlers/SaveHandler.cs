@@ -9,9 +9,13 @@ public class SaveHandler : MonoBehaviour
 
     private void Awake()
     {
+        Init();
+    }
+
+    private void Init()
+    {
         _bestScore = PlayerPrefs.GetInt("Record");
     }
-    
     public int GetBestScore()
     {
         return _bestScore;
